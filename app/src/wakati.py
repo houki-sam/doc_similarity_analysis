@@ -7,7 +7,7 @@ import MeCab
 import pickle
 import numpy as np
 from gensim.models.doc2vec import Doc2Vec
-from gensim.models.doc2vec import TaggedDocument
+from gensim.models.doc2vec import LabeledSentence
 from sklearn.feature_extraction.text import CountVectorizer
 
 from settings import stack_dir
@@ -35,37 +35,41 @@ def create_dict(path):
     }
     return corpus_dict
 
+def txt2doc(path):
+    tagger = MeCab.Tagger('-Owakati')
+    with open(path) as f:
+        l = f.readlines()
+    l = tagger.parse("".join(l)).strip().split(" ")
+    return l 
 
 def create_models(path):
     #コーパスの辞書を作成
-    corpus_dict = create_dict(path)
-    
-    trainings = [TaggedDocument(words = values, tags = [key]) for key, values in corpus_dict.items()]
+    txt_path_list = glob("/data/*/*/*/*.txt")[:1000]
 
-    m = Doc2Vec(
-        documents= trainings, 
-        size=300,
-        alpha=0.0025,
-        min_alpha=0.000001,
-        window=15, 
-        min_count=1
+    class LabeledLineSentence(object):
+        def __init__(self, filename):
+            self.filename = filename
+        def __iter__(self):
+            for uid, line in enumerate(open(filename)):
+                yield LabeledSentence(words=line.split(), labels=['SENT_%s' % uid])
+    
+    
+    sentences = [LabeledSentence(words = txt2doc(key), tags = [key]) for key in txt_path_list]
+    model = Doc2Vec(
+        documents=sentences, 
+        vector_size=300,
+        alpha=.025, 
+        min_alpha=.025, 
+        min_count=1,
+        epoch=10000,
+        dm=0
         )
     
     # モデルのセーブ
     os.makedirs(stack_dir, exist_ok=True)
-    m.save(os.path.join(stack_dir ,"doc2vec.model"))
+    model.save(os.path.join(stack_dir ,"doc2vec.model"))
 
-    array = []
-    key_dict = [x for x in corpus_dict.keys()]
-    for key in key_dict:
-        array.append(m.docvecs[key])
-    
-    array = np.array(array)
-    
-    with open(os.path.join(stack_dir,"doc2vec_array.pickle"), mode="wb") as f:
-        pickle.dump((key_dict,array), f)
-
-    return m, key_dict, array
+    return model
 
 
     

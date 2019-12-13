@@ -8,10 +8,6 @@ import numpy as np
 from src.controller import main
 from settings import test_dir
 
-# コサイン類似度の算出式
-def cos_sim(v1, v2):
-    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
-
 
 if __name__ == "__main__":
     # 検索ディレクトリを入力
