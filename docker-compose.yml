@@ -1,0 +1,9 @@
+version: '3' 
+services: 
+  python:
+    container_name: mecabpy
+    build: ./build/python
+    volumes:
+      - ./app:/code
+      - ./data:/data
+    tty: true
