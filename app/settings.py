@@ -9,7 +9,7 @@ threshold = 0.8
 teaching_dir = "/data/teaching_data"
 
 # doc->docx変換ファイルの一時保管場所
-stack_dir = "/data/stack/"
+stack_dir = "/data/stack"
 
 # 判別対象のファイル
-test_dir = "/code/src/test_data"
+test_dir = "/data/test_data"
