@@ -28,16 +28,12 @@ def main(path, learn):
     
     
     #分類もとになるデータ
-    if learn or not os.path.exists(os.path.join(stack_dir,"doc2vec.model")):
-        model = wakati.create_models(teaching_dir)
-
-    else:
-        #try:
-        model = Doc2Vec.load(os.path.join(stack_dir,"doc2vec.model"))
-        
-        #except:
-            #print("学習データを読み込めませんでした。")
-            #sys.exit()
+    try:
+        model = Doc2Vec.load(model_dir)
+    
+    except:
+        print("学習データを読み込めませんでした。")
+        sys.exit()
     
     test_key_list = [key for key in test.keys()]
     test_array = []

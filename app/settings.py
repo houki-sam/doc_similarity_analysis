@@ -13,3 +13,6 @@ stack_dir = "/data/stack"
 
 # 判別対象のファイル
 test_dir = "/data/test_data"
+
+#学習モデルのファイル
+model_dir = "/data/jawiki.doc2vec.dbow300d.model"

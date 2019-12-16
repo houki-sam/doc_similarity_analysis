@@ -144,3 +144,4 @@ data/teach_data/*
 data/test_data/*
 
 app/result.csv
+data/*.model

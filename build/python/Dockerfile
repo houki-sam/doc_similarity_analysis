@@ -1,7 +1,10 @@
 FROM python:3.7
 #ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
-RUN mkdir /data
+RUN mkdir /data \
+  && mkdir /data/stack \
+  && mkdir /data/test_data \
+  && mkdir /data/teach_data
 WORKDIR /code
 RUN apt-get update -y \
   && apt-get upgrade -y \
