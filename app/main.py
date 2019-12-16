@@ -17,6 +17,8 @@ if __name__ == "__main__":
     # 未入力の場合はデフォルトの場所を検索
     if len(path) == 0:
         path = test_dir
+    
+    #今回、学習機能はoff
     """
     LearnText = "再学習しますか？Yes or No (default : No)"
     learn = input(LearnText).lower()

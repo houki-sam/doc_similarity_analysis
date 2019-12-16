@@ -12,7 +12,7 @@ from gensim.models.doc2vec import TaggedDocument
 from sklearn.feature_extraction.text import CountVectorizer
 
 from . import wakati
-from settings import teaching_dir, test_dir, stack_dir
+from settings import teaching_dir, test_dir, stack_dir, model_dir
 from converter.pdf_converter import pdf2doc
 from converter.docx_converter import docx2doc
 
@@ -25,7 +25,6 @@ def main(path, learn):
     #検索対象のデータ
     test =wakati.create_dict(path)
     teach = wakati.create_dict(teaching_dir)
-    
     
     #分類もとになるデータ
     try:
