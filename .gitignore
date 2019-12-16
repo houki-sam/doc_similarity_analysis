@@ -134,7 +134,11 @@ dmypy.json
 .devcontainer/
 .idea
 database.dump
-data/
 dataset/
 
 app/test_data/
+
+data/livedoor/*
+data/stack/*
+data/teach_data/*
+data/test_data/*
