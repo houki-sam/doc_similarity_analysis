@@ -7,56 +7,44 @@ import MeCab
 import pickle
 import numpy as np
 import pandas as pd
-from gensim.models.doc2vec import Doc2Vec
-from gensim.models.doc2vec import TaggedDocument
-from sklearn.feature_extraction.text import CountVectorizer
+
 
 from . import wakati
-from settings import teaching_dir, test_dir, stack_dir, model_dir
+from . import doc2vec
+from . import similarity
 from converter.pdf_converter import pdf2doc
 from converter.docx_converter import docx2doc
-
-def cos(teach_array,test_array):
-    bunbo = np.dot(np.linalg.norm(teach_array,axis=1,ord=2)[:,None],np.linalg.norm(test_array,axis=1,ord=2)[None,:])
-    bunshi = np.dot(teach_array, test_array.T)
-    return bunshi/bunbo
+from settings import target_dir, stack_dir, model_dir
 
 def main(path, learn):
-    #検索対象のデータ
-    test =wakati.create_dict(path)
-    teach = wakati.create_dict(teaching_dir)
+    target =wakati.create_dict(path)#検索対象のデータ
     
-    #分類もとになるデータ
-    try:
-        model = Doc2Vec.load(model_dir)
+    #try: #学習ずみデータ
+    model = doc2vec.return_model(model_dir)
+    #except: 
+        #print("学習データを読み込めませんでした。")
+        #sys.exit()
     
-    except:
-        print("学習データを読み込めませんでした。")
-        sys.exit()
+    target_key_list = [key for key in target.keys()]
+    target_array = []
     
-    test_key_list = [key for key in test.keys()]
-    test_array = []
-    for key in test_key_list:
-        test_array.append(model.infer_vector(test[key]))
-
-    teach_key_list = [key for key in teach.keys()]
-    teach_array = []
-    for key in teach_key_list:
-        teach_array.append(model.infer_vector(teach[key]))
-    
-    teach_array = np.array(teach_array)
-    test_array = np.array(test_array)
-
-    result = pd.DataFrame(cos(teach_array,test_array),index = teach_key_list, columns=test_key_list)
-
     result = []
-    for x in teach_key_list:
+    for x in target_key_list:
         stack=[]
-        for y in test_key_list:
-            stack.append(model.docvecs.similarity_unseen_docs(model, teach[x], test[y], alpha=1, min_alpha=0.0001, steps=5))
+        for y in target_key_list:
+            stack.append(
+                model.docvecs.similarity_unseen_docs(
+                    model, 
+                    target[x], 
+                    target[y], 
+                    alpha = 0.0001,
+                    min_alpha = 0.0001,
+                    steps = 10,
+                    ),
+                )
         result.append(stack)
     
-    result = pd.DataFrame(result, index = teach_key_list, columns=test_key_list)    
+    result = pd.DataFrame(result, index = target_key_list, columns=target_key_list)    
     result.to_csv("result.csv")
 
 

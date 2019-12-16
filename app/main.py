@@ -6,28 +6,17 @@ from glob import glob
 import numpy as np
 
 from src.controller import main
-from settings import test_dir
+from settings import target_dir
 
 
 if __name__ == "__main__":
-    # 検索ディレクトリを入力
-    ExplanatoryText = "検索するディレクトリ(default : {})".format(test_dir)
-    path = input(ExplanatoryText)
 
+    # 検索ディレクトリを入力
+    path = input("検索するディレクトリ(default : {})".format(target_dir))
     # 未入力の場合はデフォルトの場所を検索
     if len(path) == 0:
-        path = test_dir
+        path = target_dir
     
-    #今回、学習機能はoff
-    """
-    LearnText = "再学習しますか？Yes or No (default : No)"
-    learn = input(LearnText).lower()
-    # 未入力の場合は学習をしない
-    if learn == "y" or learn == "yes":
-        learn = True
-    else:
-        learn = False
-    """
-
-
+    args = sys.argv
+    #あとで再学習についてのプログラムを書く
     main(path, False)
