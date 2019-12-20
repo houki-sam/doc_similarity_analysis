@@ -10,7 +10,7 @@ from gensim.models.doc2vec import Doc2Vec
 from gensim.models.doc2vec import LabeledSentence
 from sklearn.feature_extraction.text import CountVectorizer
 
-from .Text import Text_Data
+from .text import Text_Data
 from settings import stack_dir
 from converter.pdf_converter import pdf2doc
 from converter.docx_converter import docx2doc
@@ -31,8 +31,8 @@ def create_dict(path):
 
     # ファイル名:テキストの辞書を作成    
     corpus_dict = {
-        **{path : parser.Text_Data(docx2doc(path)) for path in word_path_list},
-        **{path : parser.Text_Data(pdf2doc(path)) for path in pdf_path_list},
+        **{path : parser(docx2doc(path)) for path in word_path_list if len(parser(docx2doc(path)))>0},
+        **{path : parser(pdf2doc(path)) for path in pdf_path_list if len(parser(pdf2doc(path)))>0},
     }
     return corpus_dict
 
